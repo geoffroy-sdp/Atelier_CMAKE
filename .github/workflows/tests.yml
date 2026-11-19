@@ -19,3 +19,22 @@ jobs:
           cmake ..
           make
           make test
+  Test_Add:
+    runs-on: self-hosted
+    needs: Compilation
+    steps:
+      - name: Test fonction add
+        run: |
+          last_directory=$(basename ${{ runner.workspace }})
+          if [ -d "./$last_directory/.git" ]; then
+            cd ./$last_directory
+            git pull
+          else
+            git clone https://github.com/${{ github.repository }}.git
+            cd ./$last_directory
+          fi
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+          ./src/calculator add 10 5
